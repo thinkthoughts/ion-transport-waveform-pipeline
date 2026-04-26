@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{cite}
 
 \title{Constraint-Gated Waveform Design for Low-Excitation Ion Transport}
 \author{Dan Hawkley}
@@ -29,6 +30,22 @@ between waveform design and physical performance.
 Segmented trapped-ion architectures require reliable ion transport between trap zones. Transport waveforms must move ions quickly while limiting residual motional excitation. This work develops a small, reproducible simulation pipeline that directly connects waveform design to excitation outcomes.
 
 This work focuses on making these tradeoffs directly visible through a minimal computational model, rather than optimizing a specific hardware implementation.
+
+\section{Related Work}
+
+Ion transport in segmented traps has been studied extensively in both
+experimental and theoretical contexts. Early work demonstrated reliable
+transport and splitting operations in RF traps~\cite{rowe2002transport},
+while later experiments achieved fast transport with low excitation
+using optimized control protocols~\cite{bowler2012coherent}.
+
+From a theoretical perspective, smooth trajectory design has been shown
+to suppress excitation during transport~\cite{torrontegui2011fast},
+motivating the use of minimum-jerk and related interpolation schemes.
+
+The present work complements this literature by providing a minimal,
+reproducible pipeline in which these effects are directly visible and
+quantifiable.
 
 \section{Pipeline}
 
@@ -140,5 +157,8 @@ available at:
 
 \href{https://github.com/thinkthoughts/ion-transport-waveform-pipeline}
 {github.com/thinkthoughts/ion-transport-waveform-pipeline}
+
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
