@@ -106,6 +106,8 @@ def analyze_waveform(label: str, path: Path, cfg: TrapConfig, ion: IonSpecies) -
         "residual_energy": residual_energy_proxy(
             x, v, x_c, cfg.omega_rad_s, mass_kg=ion.mass_kg
         ),
+        "energy_norm_rms": E_norm_rms,
+        "energy_norm_peak": E_norm_peak,
         "max_abs_residual": float(np.max(np.abs(residual))),
         "rms_residual": float(np.sqrt(np.mean(residual**2))),
     }
