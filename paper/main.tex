@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{cite}
+\usepackage{float}
 
 \title{Constraint-Gated Waveform Design for Low-Excitation Ion Transport}
 \author{Dan Hawkley}
@@ -27,17 +28,23 @@ between waveform design and physical performance.
 
 \section{Introduction}
 
-Segmented trapped-ion architectures require reliable ion transport between trap zones. Transport waveforms must move ions quickly while limiting residual motional excitation. This work develops a small, reproducible simulation pipeline that directly connects waveform design to excitation outcomes.
+Segmented trapped-ion architectures require reliable ion transport between
+trap zones. Transport waveforms must move ions quickly while limiting
+residual motional excitation. This work develops a small, reproducible
+simulation pipeline that directly connects waveform design to excitation
+outcomes.
 
-This work focuses on making these tradeoffs directly visible through a minimal computational model, rather than optimizing a specific hardware implementation.
+This work focuses on making these tradeoffs directly visible through a
+minimal computational model, rather than optimizing a specific hardware
+implementation.
 
 \section{Related Work}
 
 Ion transport in segmented traps has been studied extensively in both
 experimental and theoretical contexts. Early work demonstrated reliable
 transport and splitting operations in RF traps~\cite{rowe2002transport},
-while later experiments achieved fast transport with low excitation
-using optimized control protocols~\cite{bowler2012coherent}.
+while later experiments achieved fast transport with low excitation using
+optimized control protocols~\cite{bowler2012coherent}.
 
 From a theoretical perspective, smooth trajectory design has been shown
 to suppress excitation during transport~\cite{torrontegui2011fast},
@@ -78,7 +85,8 @@ Smooth transport paths are generated using minimum-jerk interpolation:
 \[
 s(u)=10u^3-15u^4+6u^5.
 \]
-This ensures zero velocity and acceleration at endpoints, reducing excitation.
+This ensures zero velocity and acceleration at endpoints, reducing
+excitation.
 
 \section{Results}
 
@@ -87,9 +95,9 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 The ion trajectory closely follows the target transport path under
 minimum-jerk control, indicating low excitation during motion.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/04_motion_trace.png}
+\includegraphics[width=0.78\textwidth]{../figures/04_motion_trace.png}
 \caption{Ion trajectory closely follows the target transport path under minimum-jerk control.}
 \end{figure}
 
@@ -98,9 +106,9 @@ minimum-jerk control, indicating low excitation during motion.
 Minimum-jerk transport significantly suppresses oscillatory residual
 motion compared to linear interpolation, which strongly excites the trap.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/05_excitation_residual_time_series.png}
+\includegraphics[width=0.78\textwidth]{../figures/05_excitation_residual_time_series.png}
 \caption{Minimum-jerk transport suppresses oscillatory excitation relative to linear interpolation.}
 \end{figure}
 
@@ -109,9 +117,9 @@ motion compared to linear interpolation, which strongly excites the trap.
 Residual excitation decreases systematically with increasing transport
 duration, demonstrating a clear tradeoff between speed and excitation.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/06_excitation_vs_duration.png}
+\includegraphics[width=0.78\textwidth]{../figures/06_excitation_vs_duration.png}
 \caption{Residual excitation decreases systematically with increasing transport duration.}
 \end{figure}
 
@@ -121,9 +129,9 @@ Frequency-domain analysis shows that linear transport excites the trap
 near the secular frequency, while minimum-jerk trajectories suppress
 resonant excitation.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/05_excitation_fft_spectrum.png}
+\includegraphics[width=0.78\textwidth]{../figures/05_excitation_fft_spectrum.png}
 \caption{Residual-motion spectrum showing suppression of excitation at the trap secular frequency.}
 \end{figure}
 
