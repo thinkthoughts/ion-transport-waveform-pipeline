@@ -1,19 +1,70 @@
 # Pipeline
 
-```text
-Electrode Basis → Potential Well → Transport Path → Voltage Waveform
-       ↓                ↓               ↓                  ↓
-  Field Model     Position Target   Time Param      Control Signal
-       ↓                ↓               ↓                  ↓
-           Ion Motion Simulation → Excitation Metric
+The transport pipeline is:
+
+```
+electrode basis
+→ potential well
+→ transport path
+→ voltage waveform
+→ ion motion
+→ excitation metric
+→ tradeoff analysis
 ```
 
-## Initial scope
+---
 
-The first version uses a simplified 1D model. That keeps the pipeline transparent:
+## 1. Electrode Basis
 
-1. define electrode basis functions
-2. solve approximate voltages for target wells
-3. move the target well along a smooth trajectory
-4. simulate ion motion in a moving harmonic potential
-5. measure residual excitation
+Construct spatial basis functions representing electrode potentials.
+
+---
+
+## 2. Potential Well
+
+Solve for voltages that produce a harmonic well at a target position.
+
+---
+
+## 3. Transport Path
+
+Define time-dependent well position:
+
+- linear path
+- minimum-jerk path (preferred)
+
+---
+
+## 4. Voltage Waveform
+
+Map trajectory → electrode voltages over time.
+
+---
+
+## 5. Ion Motion
+
+Simulate dynamics:
+
+```
+m ẍ = -m ω² (x - x_c(t))
+```
+
+---
+
+## 6. Excitation Metric
+
+Measure residual motion:
+
+- displacement
+- velocity
+- energy proxy
+
+---
+
+## 7. Tradeoff Analysis
+
+Evaluate:
+
+- duration vs excitation
+- velocity vs excitation
+- acceleration vs excitation
