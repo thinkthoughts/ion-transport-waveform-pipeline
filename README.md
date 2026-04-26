@@ -90,7 +90,7 @@ See: <a href="paper/main.pdf">the compiled PDF</a>.
 
 - <a href="docs/pipeline.md">Pipeline</a>
 - <a href="docs/glossary.md">Glossary</a>
-- <a href="docs/RESUME_connection.md">RESUME Connection</a>
+- <a href="RESUME_connection.md">RESUME Connection</a>
 
 ---
 
