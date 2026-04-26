@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="docs/banner.png" width="100%" alt="Ion Transport Waveform Pipeline banner"/>
-</p>
+<p align="center"> <a href="paper/main.pdf"> <img src="docs/banner.png" width="100%" alt="Ion Transport Waveform Pipeline banner"/> </a> </p>
 A minimal, reproducible pipeline for designing and evaluating
 trapped-ion transport waveforms. Visit https://cosineconstraint.app/colab/ion_transport_waveform_pipeline.html 👈🏽
 
@@ -90,7 +88,7 @@ See:
 paper/main.tex
 ```
 
-or the compiled PDF.
+or <a href="paper/main.pdf">the compiled PDF</a>.
 
 ---
 
