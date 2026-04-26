@@ -1,22 +1,48 @@
 # Glossary
 
-## Segmented RF Paul trap
-A trapped-ion architecture using RF confinement and segmented DC electrodes for axial control and shuttling.
+## Transport Path
 
-## Ion transport
-Moving an ion from one trap region to another by changing electrode voltages.
+Time-dependent position of the potential well center.
+
+---
+
+## Minimum-Jerk Trajectory
+
+Smooth interpolation:
+
+```
+s(u) = 10u³ − 15u⁴ + 6u⁵
+```
+
+Ensures:
+
+- zero velocity at endpoints  
+- zero acceleration at endpoints  
+
+---
+
+## Residual Motion
+
+Difference between ion position and target path:
+
+```
+r(t) = x(t) − x_c(t)
+```
+
+---
+
+## Excitation
+
+Energy associated with residual motion.
+
+---
+
+## Secular Frequency
+
+Natural oscillation frequency of the trapped ion.
+
+---
 
 ## Waveform
-A time-indexed sequence of electrode voltages designed to move the ion while minimizing excitation.
 
-## Motional excitation
-Residual oscillatory motion after transport. Lower excitation means cleaner quantum operations.
-
-## Secular frequency
-Effective harmonic oscillation frequency of the trapped ion near a potential minimum.
-
-## Minimum-jerk path
-A smooth path with zero velocity and acceleration at endpoints, useful for low-excitation transport.
-
-## Constraint-gated control synthesis
-A project framing: build candidate controls, simulate physical response, then classify controls by measurable constraints such as excitation, bandwidth, and robustness.
+Time-dependent electrode voltages controlling the trap.
