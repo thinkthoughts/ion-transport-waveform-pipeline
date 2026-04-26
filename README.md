@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="docs/banner.png" width="100%" alt="Ion Transport Waveform Pipeline banner"/>
+</p>
 # Ion Transport Waveform Pipeline
 
 A minimal, reproducible pipeline for designing and evaluating
