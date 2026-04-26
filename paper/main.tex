@@ -13,27 +13,37 @@
 \maketitle
 
 \begin{abstract}
-We present a compact computational pipeline for trapped-ion transport waveform design in segmented RF Paul traps. The pipeline maps electrode-basis potentials to moving potential wells, generates smooth voltage waveforms, simulates ion motion, and evaluates residual motional excitation. The implementation uses a transparent one-dimensional model so that relationships between transport speed, waveform smoothness, and excitation are directly observable.
+We present a minimal, reproducible pipeline for designing trapped-ion
+transport waveforms and directly evaluating their dynamical consequences.
+Using a one-dimensional model, we show that smooth minimum-jerk transport
+trajectories suppress motional excitation by multiple orders of magnitude
+compared to linear interpolation, and we quantify clear tradeoffs between
+transport speed, waveform smoothness, and residual excitation. The
+framework is intentionally simple so that these relationships are
+transparent and directly inspectable, providing a practical bridge
+between waveform design and physical performance.
 \end{abstract}
 
 \section{Introduction}
 
 Segmented trapped-ion architectures require reliable ion transport between trap zones. Transport waveforms must move ions quickly while limiting residual motional excitation. This work develops a small, reproducible simulation pipeline that directly connects waveform design to excitation outcomes.
 
+This work focuses on making these tradeoffs directly visible through a minimal computational model, rather than optimizing a specific hardware implementation.
+
 \section{Pipeline}
 
 The computational pipeline is:
 \[
 \text{electrode basis}
-\rightarrow
+\;\rightarrow\;
 \text{potential well}
-\rightarrow
+\;\rightarrow\;
 \text{transport path}
-\rightarrow
+\;\rightarrow\;
 \text{voltage waveform}
-\rightarrow
+\;\rightarrow\;
 \text{ion motion}
-\rightarrow
+\;\rightarrow\;
 \text{excitation metric}.
 \]
 
@@ -57,6 +67,9 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 
 \subsection{Transport Trajectory}
 
+The ion trajectory closely follows the target transport path under
+minimum-jerk control, indicating low excitation during motion.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{../figures/04_motion_trace.png}
@@ -64,6 +77,9 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 \end{figure}
 
 \subsection{Path Comparison}
+
+Minimum-jerk transport significantly suppresses oscillatory residual
+motion compared to linear interpolation, which strongly excites the trap.
 
 \begin{figure}[h]
 \centering
@@ -73,6 +89,9 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 
 \subsection{Excitation Scaling}
 
+Residual excitation decreases systematically with increasing transport
+duration, demonstrating a clear tradeoff between speed and excitation.
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{../figures/06_excitation_vs_duration.png}
@@ -80,6 +99,10 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 \end{figure}
 
 \subsection{Frequency-Domain Analysis}
+
+Frequency-domain analysis shows that linear transport excites the trap
+near the secular frequency, while minimum-jerk trajectories suppress
+resonant excitation.
 
 \begin{figure}[h]
 \centering
@@ -89,7 +112,12 @@ This ensures zero velocity and acceleration at endpoints, reducing excitation.
 
 \section{Discussion}
 
-Smooth transport paths suppress resonant excitation by minimizing dynamical forcing. The results demonstrate:
+The key result of this work is that excitation behavior emerges clearly
+from trajectory smoothness alone, without requiring complex control
+optimization.
+
+Smooth transport paths suppress resonant excitation by minimizing
+dynamical forcing. The results demonstrate:
 
 \begin{itemize}
 \item Orders-of-magnitude reduction in excitation for minimum-jerk paths
@@ -99,14 +127,18 @@ Smooth transport paths suppress resonant excitation by minimizing dynamical forc
 
 \section{Conclusion}
 
-We presented a compact, interpretable pipeline for ion transport waveform design. The framework directly connects control synthesis to physical outcomes and highlights fundamental tradeoffs between speed and excitation. This approach provides a foundation for more advanced optimal control and experimental implementation.
+We presented a compact, interpretable pipeline for ion transport waveform
+design. The framework directly connects control synthesis to physical
+outcomes and highlights fundamental tradeoffs between speed and
+excitation. This approach provides a foundation for more advanced optimal
+control and experimental implementation.
 
 \section*{Code Availability}
 
-The project repository is available at:
-\[
+All code and figures are generated from a small, reproducible pipeline
+available at:
+
 \href{https://github.com/thinkthoughts/ion-transport-waveform-pipeline}
-{github.com/thinkthoughts/ion-transport-waveform-pipeline}.
-\]
+{github.com/thinkthoughts/ion-transport-waveform-pipeline}
 
 \end{document}
