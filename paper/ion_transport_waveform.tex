@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.85in]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Constraint-Gated Waveform Design for Low-Excitation Ion Transport}
+\author{Dan Hawkley}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a compact computational pipeline for trapped-ion transport waveform design in segmented RF Paul traps. The pipeline maps electrode-basis potentials to moving potential wells, generates smooth voltage waveforms, simulates ion motion, and evaluates residual motional excitation. The initial implementation uses a transparent one-dimensional model so that the relationship between transport speed, waveform smoothness, and final excitation is directly visible.
+\end{abstract}
+
+\section{Introduction}
+
+Segmented trapped-ion architectures require reliable ion transport between trap zones. Transport waveforms must move ions quickly while limiting residual motional excitation. This project develops a small, reproducible simulation pipeline for connecting waveform design to excitation metrics.
+
+\section{Pipeline}
+
+The computational pipeline is:
+\[
+\text{electrode basis}
+\rightarrow
+\text{potential well}
+\rightarrow
+\text{transport path}
+\rightarrow
+\text{voltage waveform}
+\rightarrow
+\text{ion motion}
+\rightarrow
+\text{excitation metric}.
+\]
+
+\section{Transport Model}
+
+The first-pass model treats ion motion in a moving harmonic well:
+\[
+m\ddot{x}(t) = -m\omega^2[x(t)-x_c(t)],
+\]
+where \(x_c(t)\) is the waveform-controlled well center.
+
+\section{Waveform Design}
+
+Smooth transport paths are generated using a minimum-jerk interpolation:
+\[
+s(u)=10u^3-15u^4+6u^5.
+\]
+This produces zero velocity and acceleration at endpoints.
+
+\section{Excitation Metric}
+
+Residual excitation is estimated using final displacement and velocity relative to the target well:
+\[
+E_{\mathrm{res}} =
+\frac{1}{2}m\left[v_f^2+\omega^2(x_f-x_c)^2\right].
+\]
+
+\section{Results}
+
+Initial figures will compare target trajectories, ion trajectories, and residual excitation across transport durations.
+
+\section{Discussion}
+
+The project provides a bridge from trapped-ion transport literature into a reusable numerical workflow for waveform design, simulation, and constraint-gated evaluation.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

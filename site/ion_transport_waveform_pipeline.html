@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ion Transport Waveform Pipeline</title>
+  <style>
+    :root {
+      --bg: #080b12;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #93c5fd;
+      --line: #243044;
+    }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #172033 0, var(--bg) 42%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    main { max-width: 960px; margin: 0 auto; padding: 56px 20px; }
+    header { margin-bottom: 32px; }
+    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; }
+    h1 { font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05; margin: 10px 0; }
+    h2 { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 24px; }
+    p, li { color: var(--muted); }
+    .card {
+      background: rgba(17,24,39,.82);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      margin: 18px 0;
+      box-shadow: 0 18px 50px rgba(0,0,0,.25);
+    }
+    code, pre {
+      background: #05070c;
+      color: #dbeafe;
+      border-radius: 10px;
+    }
+    pre { padding: 16px; overflow: auto; }
+    a { color: var(--accent); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">CGCS · trapped ions · waveform design</div>
+    <h1>Ion Transport Waveform Pipeline</h1>
+    <p>Electrode potentials → transport path → voltage waveform → ion motion → excitation metric.</p>
+  </header>
+
+  <section class="card">
+    <h2>Purpose</h2>
+    <p>
+      This page translates recent trapped-ion transport and waveform-design work into a compact,
+      reproducible simulation pipeline for segmented RF Paul traps.
+    </p>
+  </section>
+
+  <section>
+    <h2>Pipeline</h2>
+    <pre>Electrode Basis → Potential Well → Transport Path → Voltage Waveform
+       ↓                ↓               ↓                  ↓
+  Field Model     Position Target   Time Param      Control Signal
+       ↓                ↓               ↓                  ↓
+           Ion Motion Simulation → Excitation Metric</pre>
+  </section>
+
+  <section>
+    <h2>Outputs</h2>
+    <div class="grid">
+      <div class="card"><strong>Repo</strong><p>Reusable Python modules and tests.</p></div>
+      <div class="card"><strong>Notebooks</strong><p>Colab-ready transport simulations.</p></div>
+      <div class="card"><strong>Paper</strong><p>CGCS PDF for technical outreach.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>First figures</h2>
+    <ul>
+      <li>Trap potential basis</li>
+      <li>Transport waveform examples</li>
+      <li>Ion motion trace</li>
+      <li>Excitation vs transport speed</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
