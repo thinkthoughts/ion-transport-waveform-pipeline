@@ -2,91 +2,707 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ion Transport Waveform Pipeline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <!-- QRCode.js -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
     :root {
-      --bg: #080b12;
-      --panel: #111827;
+      --bg: #090d14;
+      --bg2: #0f1724;
+      --panel: rgba(17, 24, 39, 0.82);
+      --panel2: rgba(15, 23, 42, 0.92);
       --text: #e5e7eb;
-      --muted: #9ca3af;
+      --muted: #a7b0c0;
+      --soft: #6b7280;
+      --line: #253247;
       --accent: #93c5fd;
-      --line: #243044;
+      --accent2: #c4b5fd;
+      --good: #86efac;
+      --warn: #fcd34d;
+      --shadow: 0 24px 70px rgba(0,0,0,0.32);
+      --radius: 20px;
+      --max: 1060px;
     }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #172033 0, var(--bg) 42%);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(59,130,246,.25), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(168,85,247,.18), transparent 30%),
+        linear-gradient(180deg, var(--bg2), var(--bg) 45%, #06080d);
       color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.62;
     }
-    main { max-width: 960px; margin: 0 auto; padding: 56px 20px; }
-    header { margin-bottom: 32px; }
-    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .12em; font-size: .8rem; }
-    h1 { font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1.05; margin: 10px 0; }
-    h2 { margin-top: 36px; border-top: 1px solid var(--line); padding-top: 24px; }
-    p, li { color: var(--muted); }
-    .card {
-      background: rgba(17,24,39,.82);
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 38px 18px 80px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       border: 1px solid var(--line);
+      background: rgba(15,23,42,.62);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(15,23,42,.96), rgba(17,24,39,.72));
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      padding: clamp(24px, 5vw, 48px);
+      margin-bottom: 26px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -140px -160px auto;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(147,197,253,.22), transparent 66%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(2.25rem, 6vw, 5.25rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      margin: 0 0 18px;
+      max-width: 940px;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+      margin: 0 0 24px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buttonrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(2, 6, 23, .38);
+      color: var(--text);
+      font-weight: 650;
+      min-height: 42px;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(59,130,246,.38), rgba(147,51,234,.28));
+      border-color: rgba(147,197,253,.42);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 14px 44px rgba(0,0,0,.16);
+    }
+
+    .span4 { grid-column: span 4; }
+    .span6 { grid-column: span 6; }
+    .span8 { grid-column: span 8; }
+    .span12 { grid-column: span 12; }
+
+    @media (max-width: 820px) {
+      .span4, .span6, .span8, .span12 { grid-column: span 12; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+      margin: 0 0 12px;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin: 0 0 8px;
+      color: #f3f4f6;
+    }
+
+    p { color: var(--muted); margin: 0 0 14px; }
+
+    .section {
+      margin: 24px 0;
+    }
+
+    .pipeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(2,6,23,.24);
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #07111f;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      font-weight: 800;
+      font-size: .92rem;
+    }
+
+    .mathbox {
+      border: 1px solid rgba(147,197,253,.25);
+      background: rgba(2,6,23,.45);
       border-radius: 18px;
-      padding: 20px;
-      margin: 18px 0;
-      box-shadow: 0 18px 50px rgba(0,0,0,.25);
-    }
-    code, pre {
-      background: #05070c;
+      padding: 18px;
+      margin: 14px 0;
+      overflow-x: auto;
       color: #dbeafe;
-      border-radius: 10px;
     }
-    pre { padding: 16px; overflow: auto; }
-    a { color: var(--accent); }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; }
+
+    figure {
+      margin: 0;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #fff;
+    }
+
+    figcaption {
+      padding: 12px 14px 14px;
+      color: var(--muted);
+      font-size: .92rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    @media (max-width: 820px) {
+      .figure-grid { grid-template-columns: 1fr; }
+    }
+
+    .note {
+      color: var(--muted);
+      border-left: 3px solid var(--accent);
+      padding-left: 14px;
+      margin: 14px 0 0;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      margin-top: 12px;
+    }
+
+    .table th, .table td {
+      border-bottom: 1px solid var(--line);
+      padding: 11px 12px;
+      text-align: left;
+      color: var(--muted);
+      vertical-align: top;
+    }
+
+    .table th {
+      color: var(--text);
+      background: rgba(2,6,23,.42);
+      font-weight: 720;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .qrwrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    #qrcode {
+      background: white;
+      padding: 10px;
+      border-radius: 14px;
+      width: max-content;
+    }
+
+    .small {
+      color: var(--soft);
+      font-size: .92rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: var(--soft);
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    code {
+      background: rgba(2,6,23,.62);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 2px 6px;
+      color: #dbeafe;
+    }
+
+    .copy-status {
+      color: var(--good);
+      margin-left: 8px;
+      font-size: .9rem;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .copy-status.show { opacity: 1; }
   </style>
 </head>
+
 <body>
 <main>
-  <header>
-    <div class="eyebrow">CGCS · trapped ions · waveform design</div>
+  <div class="topbar">
+    <div class="badge">after-paper bridge · CGCS · trapped-ion transport</div>
+    <div class="badge">same physics · clearer pipeline</div>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">Ion transport · waveform design · excitation control</div>
     <h1>Ion Transport Waveform Pipeline</h1>
-    <p>Electrode potentials → transport path → voltage waveform → ion motion → excitation metric.</p>
-  </header>
-
-  <section class="card">
-    <h2>Purpose</h2>
-    <p>
-      This page translates recent trapped-ion transport and waveform-design work into a compact,
-      reproducible simulation pipeline for segmented RF Paul traps.
+    <p class="subtitle">
+      A compact bridge from segmented-trap ion transport papers and job-description requirements into a reproducible simulation pipeline:
+      electrode basis → moving potential well → voltage waveform → ion motion → excitation metric.
     </p>
-  </section>
 
-  <section>
-    <h2>Pipeline</h2>
-    <pre>Electrode Basis → Potential Well → Transport Path → Voltage Waveform
-       ↓                ↓               ↓                  ↓
-  Field Model     Position Target   Time Param      Control Signal
-       ↓                ↓               ↓                  ↓
-           Ion Motion Simulation → Excitation Metric</pre>
-  </section>
+    <div class="meta">
+      <span class="badge">2026</span>
+      <span class="badge">Dan Hawkley</span>
+      <span class="badge">one-dimensional transparent model</span>
+      <span class="badge">minimum-jerk control</span>
+    </div>
 
-  <section>
-    <h2>Outputs</h2>
-    <div class="grid">
-      <div class="card"><strong>Repo</strong><p>Reusable Python modules and tests.</p></div>
-      <div class="card"><strong>Notebooks</strong><p>Colab-ready transport simulations.</p></div>
-      <div class="card"><strong>Paper</strong><p>CGCS PDF for technical outreach.</p></div>
+    <div class="buttonrow">
+      <a class="btn primary" href="https://github.com/thinkthoughts/ion-transport-waveform-pipeline">GitHub repo</a>
+      <!-- Update this PDF filename/path after upload -->
+      <a class="btn primary" href="./papers/ion-transport-waveform-pipeline/main.pdf">Read PDF</a>
+      <a class="btn" href="#notebooks">Open notebooks</a>
+      <a class="btn" href="#figures">View figures</a>
+      <a class="btn" href="/">home</a>
     </div>
   </section>
 
-  <section>
-    <h2>First figures</h2>
-    <ul>
-      <li>Trap potential basis</li>
-      <li>Transport waveform examples</li>
-      <li>Ion motion trace</li>
-      <li>Excitation vs transport speed</li>
-    </ul>
+  <section class="section grid">
+    <div class="card span8">
+      <h2>One-line translation</h2>
+      <p>
+        Smooth transport waveforms reduce motional excitation by making the moving trap center continuous enough that the ion follows rather than rings.
+      </p>
+      <div class="mathbox">
+        \[
+          m\ddot{x}(t) = -m\omega^2\big[x(t)-x_c(t)\big]
+        \]
+      </div>
+      <p class="note">
+        The page is intentionally simple: it shows a reproducible path from trajectory design to excitation scaling, rather than claiming a full hardware-specific optimizer.
+      </p>
+    </div>
+
+    <div class="card span4">
+      <h2>Scan / share</h2>
+      <div class="qrwrap">
+        <div id="qrcode" aria-label="QR code pointing to this page"></div>
+        <div>
+          <p>QR points to this page URL.</p>
+          <button class="btn" id="copyBtn" type="button">copy page link</button>
+          <span class="copy-status" id="copyStatus">copied</span>
+        </div>
+      </div>
+    </div>
   </section>
+
+  <section class="section card">
+    <h2>Pipeline diagram</h2>
+    <p>
+      The project turns ion shuttling into a readable control pipeline. Each stage produces either a figure, a saved data object, or a reusable module.
+    </p>
+
+    <div class="pipeline">
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Electrode basis</h3>
+          <p>Construct simplified spatial basis functions for segmented electrodes.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Potential well</h3>
+          <p>Solve electrode voltages that place an approximate harmonic well at target positions.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Transport path</h3>
+          <p>Move the well center \(x_c(t)\) with minimum-jerk trajectories.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <h3>Voltage waveform</h3>
+          <p>Map \(x_c(t)\) into electrode voltages \(v(t)\), then check continuity and slew-rate demand.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">5</div>
+        <div>
+          <h3>Ion motion</h3>
+          <p>Simulate the ion response and compare \(x(t)\) against \(x_c(t)\).</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">6</div>
+        <div>
+          <h3>Excitation metric</h3>
+          <p>Measure residual amplitude, residual energy proxy, and residual-motion spectrum.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section grid">
+    <div class="card span6">
+      <h2>Transport path</h2>
+      <p>
+        Minimum-jerk interpolation uses a smooth endpoint-constrained path:
+      </p>
+      <div class="mathbox">
+        \[
+          s(u)=10u^3-15u^4+6u^5,\qquad u=t/T
+        \]
+      </div>
+      <p>
+        This gives zero velocity and acceleration at endpoints, reducing impulsive forcing compared with linear interpolation.
+      </p>
+    </div>
+
+    <div class="card span6">
+      <h2>Excitation metrics</h2>
+      <p>
+        Residual motion is the difference between the simulated ion trajectory and the moving well center:
+      </p>
+      <div class="mathbox">
+        \[
+          r(t)=x(t)-x_c(t)
+        \]
+        \[
+          E_{\mathrm{res}}(t)=\frac12 m\left(\dot r(t)^2+\omega^2r(t)^2\right)
+        \]
+      </div>
+    </div>
+  </section>
+
+  <section class="section card" id="figures">
+    <h2>Figures</h2>
+    <p>
+      Put these image files beside this page or adjust the <code>src</code> paths below.
+      The figure sequence is the paper argument: motion → residual → scaling → spectrum.
+    </p>
+
+    <div class="figure-grid">
+      <figure>
+        <img src="./figures/04_motion_trace.png" alt="Ion trajectory closely follows the target path under minimum-jerk control.">
+        <figcaption><strong>Figure 1.</strong> Ion trajectory follows the target transport path under minimum-jerk control.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./figures/05_excitation_residual_time_series.png" alt="Residual motion plot comparing minimum-jerk and linear trajectories.">
+        <figcaption><strong>Figure 2.</strong> Minimum-jerk transport suppresses oscillatory residual motion relative to linear interpolation.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./figures/06_excitation_vs_duration.png" alt="Log-log plot showing residual excitation decreasing with transport duration.">
+        <figcaption><strong>Figure 3.</strong> Residual excitation decreases systematically with increasing transport duration.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="./figures/05_excitation_fft_spectrum.png" alt="Frequency spectrum showing suppressed excitation at the secular frequency for minimum-jerk transport.">
+        <figcaption><strong>Figure 4.</strong> Residual-motion spectrum shows suppression at the trap secular frequency.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section grid">
+    <div class="card span6">
+      <h2>Key result</h2>
+      <p>
+        The project shows that excitation behavior emerges clearly from trajectory smoothness alone.
+        Linear interpolation strongly excites oscillatory motion, while minimum-jerk transport suppresses the resonance peak and reduces residual energy by orders of magnitude.
+      </p>
+    </div>
+
+    <div class="card span6">
+      <h2>Why this matters</h2>
+      <p>
+        For trapped-ion systems, transport speed and motional excitation are coupled design constraints.
+        This page makes that tradeoff visible in a compact reproducible model.
+      </p>
+    </div>
+  </section>
+
+  <section class="section card" id="notebooks">
+    <h2>Notebooks</h2>
+    <p>
+      The notebooks are organized as a readable progression from geometry to tradeoff analysis.
+    </p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Notebook</th>
+          <th>Purpose</th>
+          <th>Colab</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>00_trap_basis.ipynb</code></td>
+          <td>Build simplified segmented-electrode basis functions.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/00_trap_basis.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>01_well_positioning.ipynb</code></td>
+          <td>Solve approximate voltages for target well positions.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/01_well_positioning.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>02_transport_path.ipynb</code></td>
+          <td>Compare linear and minimum-jerk transport trajectories.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/02_transport_path.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>03_waveform_generation.ipynb</code></td>
+          <td>Generate electrode voltage waveforms and slew-rate checks.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/03_waveform_generation.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>04_motion_simulation.ipynb</code></td>
+          <td>Simulate ion trajectory and residual excitation.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/04_motion_simulation.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>05_excitation_metrics.ipynb</code></td>
+          <td>Formalize residual amplitude, energy, and spectrum metrics.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/05_excitation_metrics.ipynb">open</a></td>
+        </tr>
+        <tr>
+          <td><code>06_tradeoff_analysis.ipynb</code></td>
+          <td>Analyze speed, acceleration, duration, and excitation tradeoffs.</td>
+          <td><a href="https://colab.research.google.com/github/thinkthoughts/ion-transport-waveform-pipeline/blob/main/notebooks/06_tradeoff_analysis.ipynb">open</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section card">
+    <h2>Glossary</h2>
+    <table class="table">
+      <thead>
+        <tr><th>Term</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Transport path</td><td>Time-dependent position of the moving trap well center \(x_c(t)\).</td></tr>
+        <tr><td>Minimum-jerk</td><td>Smooth interpolation with zero endpoint velocity and acceleration.</td></tr>
+        <tr><td>Residual motion</td><td>Difference between ion position and target path, \(r(t)=x(t)-x_c(t)\).</td></tr>
+        <tr><td>Secular frequency</td><td>Natural oscillation frequency of the ion in the harmonic well.</td></tr>
+        <tr><td>Waveform</td><td>Time-dependent electrode voltages used to move the well.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section card">
+    <h2>Dedicated repo / paper</h2>
+    <p>
+      This page connects to a dedicated repository and compiled short paper. The repo carries the notebooks, reusable source modules, figures, documentation, and paper source.
+    </p>
+
+<pre class="mathbox" style="white-space: pre-wrap;">ion-transport-waveform-pipeline/
+  README.md
+  src/ion_transport_waveform/
+  notebooks/
+    00_trap_basis.ipynb
+    01_well_positioning.ipynb
+    02_transport_path.ipynb
+    03_waveform_generation.ipynb
+    04_motion_simulation.ipynb
+    05_excitation_metrics.ipynb
+    06_tradeoff_analysis.ipynb
+  figures/
+  paper/
+    main.tex
+    references.bib
+  docs/
+    pipeline.md
+    glossary.md
+    figures.md
+    references.md
+    RESUME_connection.md</pre>
+
+    <p class="note">
+      Share framing: this is a compact computational bridge from ion-transport waveform design to visible excitation metrics and tradeoff analysis.
+    </p>
+  </section>
+
+  <section class="section card">
+    <h2>Corrections / additions</h2>
+    <p>
+      The goal is a small, inspectable pipeline that makes ion-transport control tradeoffs easy to see.</p>
+        <p class="small">For corrections or additions: text Dan (303.350.8939).</p>
+  </section>
+
+  <footer>
+    <span>Same physics · clearer pipeline</span>
+    <span><a href="https://github.com/thinkthoughts/ion-transport-waveform-pipeline">github repo</a> · <a href="./ion_transport_waveform_pipeline.pdf">paper PDF</a></span>
+  </footer>
 </main>
+
+<script>
+  const pageUrl = window.location.href.split('#')[0];
+
+  function makeQR() {
+    const el = document.getElementById("qrcode");
+    if (!el || typeof QRCode === "undefined") return;
+    el.innerHTML = "";
+    new QRCode(el, {
+      text: pageUrl,
+      width: 132,
+      height: 132,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  }
+
+  function setupCopy() {
+    const btn = document.getElementById("copyBtn");
+    const status = document.getElementById("copyStatus");
+    if (!btn) return;
+
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+        status.classList.add("show");
+        setTimeout(() => status.classList.remove("show"), 1200);
+      } catch (err) {
+        window.prompt("Copy page link:", pageUrl);
+      }
+    });
+  }
+
+  window.addEventListener("load", () => {
+    makeQR();
+    setupCopy();
+  });
+</script>
 </body>
 </html>
