@@ -82,22 +82,15 @@ See `figures/` or the paper for:
 
 ## Paper
 
-See:
-
-```
-paper/main.tex
-```
-
-or <a href="paper/main.pdf">the compiled PDF</a>.
+See: <a href="paper/main.pdf">the compiled PDF</a>.
 
 ---
 
 ## Documentation
 
-- `docs/pipeline.md`
-- `docs/glossary.md`
-- `docs/figures.md`
-- `docs/RESUME_connection.md`
+- <a href="docs/pipeline.md">Pipeline</a>
+- <a href="docs/glossary.md">Glossary</a>
+- <a href="docs/RESUME_connection.md">RESUME Connection</a>
 
 ---
 
