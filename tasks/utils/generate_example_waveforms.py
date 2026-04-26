@@ -1,40 +1,31 @@
 import numpy as np
-import pandas as pd
 
 def save_csv(name, t, x):
-    df = pd.DataFrame({"time": t, "position": x})
-    df.to_csv(name, index=False)
+    data = np.column_stack((t, x))
+    header = "time,position"
+    np.savetxt(name, data, delimiter=",", header=header, comments="")
     print(f"saved {name}")
 
-# base parameters
 T = 20e-6
 t = np.linspace(0, T, 500)
 x0, x1 = -80e-6, 80e-6
 
-# ----------------------------
-# 1. Linear (bad)
-# ----------------------------
+# Linear
 x_linear = x0 + (x1 - x0) * (t / T)
 save_csv("input_waveform_linear.csv", t, x_linear)
 
-# ----------------------------
-# 2. Minimum jerk (good)
-# ----------------------------
+# Minimum jerk
 u = t / T
 s = 10*u**3 - 15*u**4 + 6*u**5
 x_mj = x0 + (x1 - x0) * s
 save_csv("input_waveform_minimum_jerk.csv", t, x_mj)
 
-# ----------------------------
-# 3. Bad spike (debug case)
-# ----------------------------
+# Bad spike
 x_spike = x_linear.copy()
-x_spike[200:210] += 10e-6  # inject discontinuity
+x_spike[200:210] += 10e-6
 save_csv("input_waveform_bad_spike.csv", t, x_spike)
 
-# ----------------------------
-# 4. Fast transport (tradeoff)
-# ----------------------------
+# Fast transport
 T_fast = 5e-6
 t_fast = np.linspace(0, T_fast, 500)
 u_fast = t_fast / T_fast
