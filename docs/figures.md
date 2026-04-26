@@ -1,11 +1,48 @@
-# Figures
+# Glossary
 
-Planned figures:
+## Transport Path
 
-1. `pipeline.png` — conceptual pipeline
-2. `trap_potential.png` — electrode basis and target well
-3. `waveform_examples.png` — voltage waveforms for transport
-4. `motion_trace.png` — target path vs ion trajectory
-5. `excitation_vs_speed.png` — speed/excitation tradeoff
+Time-dependent position of the potential well center.
 
-Each figure should include short alt text for site accessibility.
+---
+
+## Minimum-Jerk Trajectory
+
+Smooth interpolation:
+
+```
+s(u) = 10u³ − 15u⁴ + 6u⁵
+```
+
+Ensures:
+
+- zero velocity at endpoints  
+- zero acceleration at endpoints  
+
+---
+
+## Residual Motion
+
+Difference between ion position and target path:
+
+```
+r(t) = x(t) − x_c(t)
+```
+
+---
+
+## Excitation
+
+Energy associated with residual motion.
+
+---
+
+## Secular Frequency
+
+Natural oscillation frequency of the trapped ion.
+
+---
+
+## Waveform
+
+Time-dependent electrode voltages controlling the trap.
