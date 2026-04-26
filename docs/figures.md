@@ -1,48 +1,35 @@
-# Glossary
+# Figures
 
-## Transport Path
+## Figure 1 — Transport trajectory
 
-Time-dependent position of the potential well center.
-
----
-
-## Minimum-Jerk Trajectory
-
-Smooth interpolation:
-
-```
-s(u) = 10u³ − 15u⁴ + 6u⁵
-```
-
-Ensures:
-
-- zero velocity at endpoints  
-- zero acceleration at endpoints  
+Ion follows the target path under minimum-jerk control.
 
 ---
 
-## Residual Motion
+## Figure 2 — Residual motion
 
-Difference between ion position and target path:
-
-```
-r(t) = x(t) − x_c(t)
-```
+- Linear path: large oscillations  
+- Minimum-jerk: suppressed residual  
 
 ---
 
-## Excitation
+## Figure 3 — Excitation scaling
 
-Energy associated with residual motion.
-
----
-
-## Secular Frequency
-
-Natural oscillation frequency of the trapped ion.
+Residual excitation decreases with transport duration.
 
 ---
 
-## Waveform
+## Figure 4 — Frequency-domain spectrum
 
-Time-dependent electrode voltages controlling the trap.
+- Linear: strong peak at secular frequency  
+- Minimum-jerk: suppressed resonance  
+
+---
+
+## Interpretation
+
+The figures show:
+
+- excitation is driven by trajectory smoothness  
+- smooth paths suppress resonant forcing  
+- transport speed introduces tradeoffs  
