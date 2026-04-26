@@ -1,86 +1,136 @@
-# ion-transport-waveform-pipeline
+# Ion Transport Waveform Pipeline
 
-Voltage waveforms for low-excitation trapped-ion transport in segmented RF Paul traps.
+A minimal, reproducible pipeline for designing and evaluating
+trapped-ion transport waveforms. Visit https://cosineconstraint.app/colab/ion_transport_waveform_pipeline.html 👈🏽
 
-**electrode basis → transport path → waveform → ion motion → excitation metric**
+---
 
-This repository develops a compact computational pipeline for ion transport and waveform design:
-- build simplified segmented-trap electrode basis potentials
-- solve control voltages for moving potential wells
-- generate smooth transport trajectories
-- simulate ion motion through time-dependent potentials
-- measure residual excitation under speed, bandwidth, and noise constraints
+## Overview
 
-## Motivation
+This project connects waveform design directly to physical outcomes:
 
-This project is designed as a public technical artifact connecting:
-- recent trapped-ion transport / waveform-design literature
-- numerical simulation and optimization workflows
-- low-excitation shuttling in segmented RF Paul traps
-- constraint-gated control synthesis (CGCS) framing
+- transport trajectory
+- ion motion
+- residual excitation
+- tradeoffs between speed and control
 
-The target deliverables are:
-1. reusable Python modules in `src/`
-2. Colab-ready notebooks in `notebooks/`
-3. figures in `figures/`
-4. a short site page in `site/`
-5. a CGCS-style paper in `paper/`
+The implementation uses a transparent one-dimensional model so that
+these relationships are directly visible.
 
-## Repository layout
+---
 
-```text
-ion-transport-waveform-pipeline/
-├── src/ion_transport_waveform/
-├── notebooks/
-├── docs/
-├── figures/
-├── data/
-├── paper/
-├── site/
-└── tests/
+## Key Result
+
+Minimum-jerk transport suppresses excitation by orders of magnitude
+relative to linear interpolation.
+
+---
+
+## Pipeline
+
+```
+electrode basis
+→ potential well
+→ transport path
+→ voltage waveform
+→ ion motion
+→ excitation metric
+→ tradeoff analysis
 ```
 
-## Quick start
+---
+
+## Quick Start
 
 ```bash
 git clone https://github.com/thinkthoughts/ion-transport-waveform-pipeline.git
 cd ion-transport-waveform-pipeline
-python -m venv .venv
-source .venv/bin/activate
+
+python3 -m venv venv
+source venv/bin/activate
+
 pip install -r requirements.txt
-pytest
+export PYTHONPATH=$PWD/src
+
+pytest -q
 ```
 
-Run a minimal simulation:
+---
+
+## Run Example
 
 ```bash
-python scripts/run_demo.py
+python scripts/run_transport_demo.py
 ```
 
-## Colab notebooks
+Output:
+- trajectory figure
+- residual amplitude
+- residual energy proxy
 
-Planned notebook sequence:
+---
 
-| Notebook | Purpose |
-|---|---|
-| `00_trap_basis.ipynb` | Build simplified electrode-basis potentials |
-| `01_well_positioning.ipynb` | Solve voltages for target harmonic wells |
-| `02_transport_path.ipynb` | Generate smooth shuttling trajectories |
-| `03_waveform_generation.ipynb` | Convert paths into voltage waveforms |
-| `04_motion_simulation.ipynb` | Simulate ion motion |
-| `05_excitation_metric.ipynb` | Measure residual excitation |
-| `06_tradeoff_analysis.ipynb` | Compare speed, smoothness, bandwidth, and excitation |
+## Figures
 
-## Core equation
+See `figures/` or the paper for:
 
-The basic 1D simulation model is
+- trajectory tracking
+- residual motion suppression
+- excitation scaling
+- frequency-domain behavior
 
-```math
-m \ddot{x}(t) = -\frac{\partial V(x,t)}{\partial x}.
+---
+
+## Paper
+
+See:
+
+```
+paper/main.tex
 ```
 
-The repo starts with a deliberately simplified 1D trap model so the workflow is transparent before expanding toward richer segmented-trap geometry.
+or the compiled PDF.
 
-## Status
+---
 
-Scaffold initialized. First target: produce figures for the site and CGCS PDF.
+## Documentation
+
+- `docs/pipeline.md`
+- `docs/glossary.md`
+- `docs/figures.md`
+- `docs/RESUME_connection.md`
+
+---
+
+## Tests
+
+Run:
+
+```bash
+pytest -q
+```
+
+Expected:
+
+```
+3 passed
+```
+
+---
+
+## Scope
+
+This is a minimal computational model:
+
+- harmonic trap approximation  
+- trajectory-driven transport  
+- excitation metrics and scaling  
+
+It is intended to make transport–excitation relationships clear and
+reproducible, not to model full experimental hardware.
+
+---
+
+## Repository
+
+https://github.com/thinkthoughts/ion-transport-waveform-pipeline
