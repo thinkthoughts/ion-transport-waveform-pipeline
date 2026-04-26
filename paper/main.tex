@@ -1,175 +1,112 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{graphicx}
+\usepackage[margin=0.85in]{geometry}
 \usepackage{amsmath}
+\usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{authblk}
 
-\title{\textbf{Constraint-Gated Waveform Design for Low-Excitation Ion Transport}}
-
+\title{Constraint-Gated Waveform Design for Low-Excitation Ion Transport}
 \author{Dan Hawkley}
-\affil{\small Independent Research}
-
-\date{}
+\date{2026}
 
 \begin{document}
-
 \maketitle
 
 \begin{abstract}
-We present a structured pipeline for designing electrode voltage waveforms that transport trapped ions with minimal motional excitation. The approach decomposes the problem into geometric potential synthesis, transport path design, waveform generation, and dynamical simulation. Using smooth minimum-jerk trajectories, we demonstrate strong suppression of residual excitation compared to linear interpolation, with clear tradeoffs between transport speed and excitation. The resulting framework provides a transparent, modular foundation for ion transport control design.
+We present a compact computational pipeline for trapped-ion transport waveform design in segmented RF Paul traps. The pipeline maps electrode-basis potentials to moving potential wells, generates smooth voltage waveforms, simulates ion motion, and evaluates residual motional excitation. The implementation uses a transparent one-dimensional model so that relationships between transport speed, waveform smoothness, and excitation are directly observable.
 \end{abstract}
 
 \section{Introduction}
 
-Transporting ions in segmented traps while minimizing excitation is a central challenge in scalable quantum information processing. Fast transport increases throughput but introduces motional excitation due to dynamical forcing. This work presents a minimal, interpretable pipeline that connects waveform design directly to physical outcomes.
+Segmented trapped-ion architectures require reliable ion transport between trap zones. Transport waveforms must move ions quickly while limiting residual motional excitation. This work develops a small, reproducible simulation pipeline that directly connects waveform design to excitation outcomes.
 
-\section{Pipeline Overview}
+\section{Pipeline}
 
-The workflow consists of:
+The computational pipeline is:
+\[
+\text{electrode basis}
+\rightarrow
+\text{potential well}
+\rightarrow
+\text{transport path}
+\rightarrow
+\text{voltage waveform}
+\rightarrow
+\text{ion motion}
+\rightarrow
+\text{excitation metric}.
+\]
 
-\begin{enumerate}
-    \item Electrode potential basis construction
-    \item Static well positioning
-    \item Time-dependent transport path design
-    \item Voltage waveform synthesis
-    \item Ion motion simulation
-    \item Excitation metric evaluation
-\end{enumerate}
+\section{Transport Model}
 
-\section{Well Positioning}
+Ion motion is modeled as a particle in a moving harmonic well:
+\[
+m\ddot{x}(t) = -m\omega^2[x(t)-x_c(t)],
+\]
+where \(x_c(t)\) is the waveform-controlled well center.
 
-Electrode voltages are solved to approximate a harmonic potential well at target positions.
+\section{Waveform Design}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/01_well_positioning_potential_profiles.png}
-\caption{Voltage-solved potential wells at different target positions.}
-\end{figure}
+Smooth transport paths are generated using minimum-jerk interpolation:
+\[
+s(u)=10u^3-15u^4+6u^5.
+\]
+This ensures zero velocity and acceleration at endpoints, reducing excitation.
 
-\section{Transport Path Design}
+\section{Results}
 
-We compare linear interpolation with minimum-jerk trajectories:
-
-\begin{equation}
-x_c(t) = x_0 + (x_1 - x_0)\left(10s^3 - 15s^4 + 6s^5\right), \quad s = \frac{t}{T}
-\end{equation}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/02_transport_path_profiles.png}
-\caption{Linear vs minimum-jerk transport paths.}
-\end{figure}
-
-Minimum-jerk trajectories ensure zero velocity and acceleration at endpoints, reducing excitation.
-
-\section{Waveform Generation}
-
-The transport path is mapped to electrode voltages:
-
-\begin{equation}
-\mathbf{V}(t) = \arg\min_{\mathbf{V}} \|\Phi(\mathbf{V}) - \Phi_{\text{target}}(x_c(t))\|
-\end{equation}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/03_waveform_voltage_profiles.png}
-\caption{Electrode voltage waveforms for transport.}
-\end{figure}
-
-We analyze continuity and slew-rate constraints:
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/03_waveform_slew_rate.png}
-\caption{Waveform slew-rate demand.}
-\end{figure}
-
-\section{Ion Motion Simulation}
-
-Ion motion is modeled in a moving harmonic potential:
-
-\begin{equation}
-\ddot{x} + \omega^2 (x - x_c(t)) = 0
-\end{equation}
+\subsection{Transport Trajectory}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{../figures/04_motion_trace.png}
-\caption{Ion trajectory closely follows target path under smooth transport.}
+\caption{Ion trajectory closely follows the target transport path under minimum-jerk control.}
 \end{figure}
 
-\section{Excitation Metrics}
-
-We define residual motion:
-
-\begin{equation}
-r(t) = x(t) - x_c(t)
-\end{equation}
-
-and an energy proxy:
-
-\begin{equation}
-E(t) = \frac{1}{2} m \left( \dot{r}^2 + \omega^2 r^2 \right)
-\end{equation}
+\subsection{Path Comparison}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{../figures/05_excitation_residual_time_series.png}
-\caption{Residual motion: minimum-jerk suppresses oscillations relative to linear paths.}
+\caption{Minimum-jerk transport suppresses oscillatory excitation relative to linear interpolation.}
 \end{figure}
 
-Frequency-domain analysis reveals excitation at the trap secular frequency:
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/05_excitation_fft_spectrum.png}
-\caption{Residual-motion spectrum showing suppression of resonant excitation.}
-\end{figure}
-
-\section{Tradeoff Analysis}
-
-We sweep transport duration and measure excitation.
+\subsection{Excitation Scaling}
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{../figures/06_excitation_vs_duration.png}
-\caption{Excitation decreases with transport duration.}
+\caption{Residual excitation decreases systematically with increasing transport duration.}
 \end{figure}
 
-We observe clear scaling with velocity and acceleration:
+\subsection{Frequency-Domain Analysis}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../figures/06_excitation_vs_velocity.png}
-\caption{Excitation vs peak velocity.}
-\end{figure}
-
-The tradeoff between speed and excitation forms a Pareto frontier:
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../figures/06_tradeoff_velocity_vs_excitation.png}
-\caption{Tradeoff between transport speed and excitation.}
+\includegraphics[width=0.8\textwidth]{../figures/05_excitation_fft_spectrum.png}
+\caption{Residual-motion spectrum showing suppression of excitation at the trap secular frequency.}
 \end{figure}
 
 \section{Discussion}
 
-Smooth transport paths suppress resonant excitation by minimizing high-frequency forcing. The results demonstrate:
+Smooth transport paths suppress resonant excitation by minimizing dynamical forcing. The results demonstrate:
 
 \begin{itemize}
-    \item Orders-of-magnitude reduction in excitation for minimum-jerk paths
-    \item Clear scaling laws linking speed and excitation
-    \item Practical constraints arising from waveform slew rate
+\item Orders-of-magnitude reduction in excitation for minimum-jerk paths
+\item Clear scaling laws linking transport speed and excitation
+\item Practical control constraints arising from waveform smoothness
 \end{itemize}
 
 \section{Conclusion}
 
-We presented a complete, interpretable pipeline for ion transport waveform design. The framework connects control synthesis to physical outcomes and highlights fundamental tradeoffs between speed and excitation. This approach provides a foundation for more advanced optimal control and experimental implementation.
+We presented a compact, interpretable pipeline for ion transport waveform design. The framework directly connects control synthesis to physical outcomes and highlights fundamental tradeoffs between speed and excitation. This approach provides a foundation for more advanced optimal control and experimental implementation.
 
 \section*{Code Availability}
 
-\href{https://github.com/thinkthoughts/ion-transport-waveform-pipeline}{github.com/thinkthoughts/ion-transport-waveform-pipeline}
+The project repository is available at:
+\[
+\href{https://github.com/thinkthoughts/ion-transport-waveform-pipeline}
+{github.com/thinkthoughts/ion-transport-waveform-pipeline}.
+\]
 
 \end{document}
