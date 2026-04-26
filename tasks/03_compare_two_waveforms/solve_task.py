@@ -89,6 +89,11 @@ def analyze_waveform(label: str, path: Path, cfg: TrapConfig, ion: IonSpecies) -
     x, v = simulate_ion_motion(t, x_c, cfg.omega_rad_s)
     residual = x - x_c
 
+    omega = cfg.omega_rad_s
+    E_norm = 0.5 * (v**2 + (omega * residual)**2)
+    E_norm_rms = float(np.mean(E_norm))
+    E_norm_peak = float(np.max(E_norm))
+    
     return {
         "label": label,
         "path": path,
